@@ -110,12 +110,12 @@ namespace GameEngine
 				0, 2, 3,
 
 				// left face
-				4, 5, 1,
-				4, 1, 0,
+				0, 4, 5,
+				0, 5, 1,
 
 				// right face
-				3, 2, 6,
-				3, 6, 7,
+				3, 2, 5,
+				3, 5, 4,
 
 				// top face
 				1, 5, 2,
