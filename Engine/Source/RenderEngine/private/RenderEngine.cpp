@@ -9,10 +9,10 @@ namespace GameEngine::Render
 		m_rhi = HAL::RHIHelper::CreateRHI("D3D12");
 		m_rhi->Init();
 
-		RenderObject::Ptr box = std::make_shared<RenderObject>();
-		m_RenderObjects.push_back(box);
-		box->m_mesh = m_rhi->CreateBoxMesh();
-		box->m_material = m_rhi->GetMaterial(box->m_mesh->GetName());
+		RenderObject::Ptr prism = std::make_shared<RenderObject>();
+		m_RenderObjects.push_back(prism);
+		prism->m_mesh = m_rhi->CreatePrismMesh();
+		prism->m_material = m_rhi->GetMaterial(prism->m_mesh->GetName());
 		
 		m_rhi->ExecuteCommandLists();
 		m_rhi->Flush();

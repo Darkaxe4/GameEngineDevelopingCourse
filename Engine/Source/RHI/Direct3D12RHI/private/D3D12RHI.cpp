@@ -90,5 +90,41 @@ namespace GameEngine
 		{
 			m_d3d12Private->OnResize();
 		}
+		Mesh::Ptr D3D12RHI::CreatePrismMesh()
+		{
+			array<Vertex, 6> vertices =
+			{
+				Vertex({ Math::Vector3f(-1.0f, -1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::White) }),
+				Vertex({ Math::Vector3f(-1.0f, +1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Black) }),
+				Vertex({ Math::Vector3f(+1.0f, +1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Red) }),
+				Vertex({ Math::Vector3f(+1.0f, -1.0f, -1.0f), Math::Vector4f((float*)&DirectX::Colors::Green) }),
+				Vertex({ Math::Vector3f(+0.0f, -1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Blue) }),
+				Vertex({ Math::Vector3f(+0.0f, +1.0f, +1.0f), Math::Vector4f((float*)&DirectX::Colors::Yellow) }),
+
+			};
+
+			array<uint16_t, 24> indices =
+			{
+				// front face
+				0, 1, 2,
+				0, 2, 3,
+
+				// left face
+				4, 5, 1,
+				4, 1, 0,
+
+				// right face
+				3, 2, 6,
+				3, 6, 7,
+
+				// top face
+				1, 5, 2,
+
+				// bottom face
+				4, 0, 3,
+			};
+
+			return m_d3d12Private->CreateMesh(vertices.begin(), vertices.size(), sizeof(Vertex), indices.begin(), indices.size(), sizeof(uint16_t));
+		}
 	}
 }
