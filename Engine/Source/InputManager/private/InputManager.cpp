@@ -20,9 +20,9 @@ namespace GameEngine::Input
 
 	void InputManager::process_input(wchar_t key)
 	{
-		if (auto search = keybinds.find(key); search != keybinds.end())
+		if (const auto& search = keybinds.find(key); search != keybinds.end())
 		{
-			if (auto event_handler = event_handlers.find(search->second); event_handler != event_handlers.end())
+			if (const auto& event_handler = event_handlers.find(search->second); event_handler != event_handlers.end())
 				event_handler->second();
 		}
 	}

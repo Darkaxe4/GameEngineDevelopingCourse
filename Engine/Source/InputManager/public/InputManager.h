@@ -1,8 +1,6 @@
 #pragma once
 
 #include <InputManager/export.h>
-#include <functional>
-#include <vector>
 #include <map>
 
 

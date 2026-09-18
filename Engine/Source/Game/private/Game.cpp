@@ -5,7 +5,7 @@
 
 namespace GameEngine
 {
-	constexpr float CAMERA_SPEED = 1.f;
+	constexpr float k_CameraSpeed = 1.f;
 
 	Game::Game(
 		std::function<bool()> PlatformLoopFunc
@@ -18,8 +18,8 @@ namespace GameEngine
 
 		m_inputManager = std::make_unique<Input::InputManager>();
 		
-		m_inputManager->subscribe("rotate_cam_left", [this]() {Core::g_MainCamera->Rotate(-CAMERA_SPEED * this->m_GameTimer.GetDeltaTime(), 0.f);});
-		m_inputManager->subscribe("rotate_cam_right", [this]() {Core::g_MainCamera->Rotate(CAMERA_SPEED * this->m_GameTimer.GetDeltaTime(), 0.f);});
+		m_inputManager->subscribe("rotate_cam_left", [this]() {Core::g_MainCamera->Rotate(-k_CameraSpeed * this->m_GameTimer.GetDeltaTime(), 0.f);});
+		m_inputManager->subscribe("rotate_cam_right", [this]() {Core::g_MainCamera->Rotate(k_CameraSpeed * this->m_GameTimer.GetDeltaTime(), 0.f);});
 
 		m_renderThread = std::make_unique<Render::RenderThread>();
 

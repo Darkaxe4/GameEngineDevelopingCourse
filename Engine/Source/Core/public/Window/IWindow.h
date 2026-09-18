@@ -2,7 +2,6 @@
 
 #include <Core/export.h>
 #include <Vector.h>
-#include <functional>
 
 namespace GameEngine::Core
 {
@@ -21,15 +20,15 @@ namespace GameEngine::Core
 		float GetAspectRatio() const { return (float)m_Width / (float)m_Height; }
 		Math::Vector2i GetMousePos() const { return m_MousePos; }
 		void SetMousePos(int x, int y) { m_MousePos.x = x; m_MousePos.y = y; }
-		void SubscribeToCharInput(std::function<void(wchar_t)> processor) { m_kb_input_processor = processor; };
-		void ProcessCharInput(wchar_t key) { if (m_kb_input_processor) m_kb_input_processor(key); }
+		void SubscribeToCharInput(std::function<void(wchar_t)> processor) { m_kbInputProcessor = processor; };
+		void ProcessCharInput(wchar_t key) { if (m_kbInputProcessor) m_kbInputProcessor(key); }
 
 	private:
 		uint32_t m_Width = 800;
 		uint32_t m_Height = 600;
 
 		void* m_WndHndl = nullptr;
-		std::function<void(wchar_t)> m_kb_input_processor;
+		std::function<void(wchar_t)> m_kbInputProcessor;
 
 		Math::Vector2i m_MousePos;
 	};
