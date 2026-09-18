@@ -51,6 +51,7 @@ target_link_libraries(Game PRIVATE
 	RenderCore
 	Core
 	RenderEngine
+	InputManager
 )
 
 target_precompile_headers(Game

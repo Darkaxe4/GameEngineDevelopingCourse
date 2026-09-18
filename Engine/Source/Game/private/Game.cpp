@@ -5,6 +5,8 @@
 
 namespace GameEngine
 {
+	constexpr float CAMERA_SPEED = 1.f;
+
 	Game::Game(
 		std::function<bool()> PlatformLoopFunc
 	) :
@@ -13,6 +15,11 @@ namespace GameEngine
 		Core::g_MainCamera = new Core::Camera();
 		Core::g_MainCamera->SetPosition(Math::Vector3f(0.0f, 6.0f, -6.0f));
 		Core::g_MainCamera->SetViewDir(Math::Vector3f(0.0f, -6.0f, 6.0f).Normalized());
+
+		m_inputManager = std::make_unique<Input::InputManager>();
+		
+		m_inputManager->subscribe("rotate_cam_left", [this]() {Core::g_MainCamera->Rotate(-CAMERA_SPEED * this->m_GameTimer.GetDeltaTime(), 0.f);});
+		m_inputManager->subscribe("rotate_cam_right", [this]() {Core::g_MainCamera->Rotate(CAMERA_SPEED * this->m_GameTimer.GetDeltaTime(), 0.f);});
 
 		m_renderThread = std::make_unique<Render::RenderThread>();
 
@@ -68,5 +75,16 @@ namespace GameEngine
 			}
 			m_Objects[i]->SetPosition(pos, m_renderThread->GetMainFrame());
 		}
+	}
+	void Game::ReadKeybinds(std::string config_file)
+	{
+		INIReader reader(config_file.data());
+		m_inputManager->bind_key(reader.Get("cam_movement", "rotate_cam_left", "a")[0], "rotate_cam_left");
+		m_inputManager->bind_key(reader.Get("cam_movement", "rotate_cam_right", "d")[0], "rotate_cam_right");
+	}
+
+	void Game::ProcessInput(wchar_t key)
+	{
+		m_inputManager->process_input(key);
 	}
 }

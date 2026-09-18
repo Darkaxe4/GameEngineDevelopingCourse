@@ -35,6 +35,9 @@ namespace GameEngine::Core
 		case WM_MOUSEMOVE:
 			OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), g_MainCamera, g_MainWindowsApplication);
 			return 0;
+		case WM_CHAR:
+			g_MainWindowsApplication->ProcessCharInput((wchar_t)wParam);
+			return 0;
 		}
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}

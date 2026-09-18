@@ -47,6 +47,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	std::unique_ptr<GameEngine::Game> game = std::make_unique<GameEngine::Game>(&WindowsMessageLoop);
 
+	// dirty, but it works
+	GameEngine::Core::g_MainWindowsApplication->SubscribeToCharInput([&game](wchar_t x) {game->ProcessInput(x);});
+	game->ReadKeybinds("..\\..\\..\\..\\..\\Assets\\Config\\Input.ini");
 	game->Run();
 
 	return 0;
