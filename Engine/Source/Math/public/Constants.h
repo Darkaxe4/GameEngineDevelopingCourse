@@ -4,6 +4,8 @@ namespace GameEngine::Math
 {
 	namespace Constants
 	{
+		constexpr float FLOAT_THRESHOLD = 0.001f;
+		constexpr float G_FORCE = -9.80665f;
 		constexpr float PI = 3.141592654f;
 		constexpr float INV_PI = 0.318309886f;
 		constexpr float INV_2PI = 0.159154943f;
