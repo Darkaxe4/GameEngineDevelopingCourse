@@ -11,6 +11,8 @@ namespace
 
 void RegisterEcsPhysSystems(flecs::world& world)
 {
+	world.component<CollidedToSurface>();
+
 	world.system<Velocity, const Gravity, BouncePlane*, Position*>()
 		.each([&](flecs::entity e, Velocity& vel, const Gravity& grav, BouncePlane* plane, Position* pos)
 	{
@@ -19,6 +21,8 @@ void RegisterEcsPhysSystems(flecs::world& world)
 			constexpr float planeEpsilon = 0.1f;
 			if (plane->value.x * pos->value.x + plane->value.y * pos->value.y + plane->value.z * pos->value.z < plane->value.w + planeEpsilon)
 			{
+				if (not e.has<CollidedToSurface>())
+					e.add<CollidedToSurface>();
 				return;
 			}
 		}
@@ -71,4 +75,51 @@ void RegisterEcsPhysSystems(flecs::world& world)
 		pos.value.y += rand_flt(-shiver.value, shiver.value);
 		pos.value.z += rand_flt(-shiver.value, shiver.value);
 	});
+
+	flecs::query colliderQuery = world.query<Position, const Collider>();
+
+	world.system<Position, const Collider>()
+		.each([&, colliderQuery](flecs::entity e1, Position& p1, const Collider& c1)
+	{
+		colliderQuery.each(
+			[&](flecs::entity e2,
+				Position& p2,
+				const Collider& c2)
+			{
+
+				if ((e1 == e2) || (e1.id() >= e2.id()))
+					return;
+
+				if (CheckCollision(p1, c1, p2, c2))
+				{
+					e1.set<CollisionEvent>({ e1, e2 });
+					e2.set<CollisionEvent>({ e2, e1 });
+				}
+			});
+	});
+
+	world.system<DestroyAfterCollision>()
+		.write(flecs::Wildcard)
+		.each([&](flecs::entity e, DestroyAfterCollision& marker)
+	{
+		marker.timer -= world.delta_time();
+
+		if (marker.timer <= 0.f)
+		{
+			world.defer_begin();
+			e.destruct();
+			world.defer_end();
+		}
+	});
+
+}
+
+bool CheckCollision(Position& posFirst, const Collider& colFirst, Position& posSecond, const Collider& colSecond)
+{
+	GameEngine::Math::Vector3f delta = posFirst.value - posSecond.value;
+
+	float distance = delta.GetLength();
+	float radiusSum = colFirst.radius + colSecond.radius;
+
+	return distance <= radiusSum;
 }

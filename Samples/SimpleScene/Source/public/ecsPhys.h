@@ -38,7 +38,26 @@ struct FrictionAmount
 	float value;
 };
 
+struct Collider
+{
+	float radius;
+};
+
+struct CollisionEvent
+{
+	flecs::entity first;
+	flecs::entity second;
+};
+
+struct CollidedToSurface{};
+
+struct DestroyAfterCollision
+{
+	float timer;
+};
+
 using Speed = float;
 
 void RegisterEcsPhysSystems(flecs::world& world);
 
+bool CheckCollision(Position& posFirst, const Collider& colFirst, Position& posSecond, const Collider& colSecond);

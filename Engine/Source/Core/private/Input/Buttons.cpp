@@ -12,6 +12,7 @@ namespace GameEngine::Core
 		{"w", KeyboardButton::W},
 		{"s", KeyboardButton::S},
 		{"d", KeyboardButton::D},
+		{"e", KeyboardButton::E},
 		{"spacebar", KeyboardButton::SPACEBAR}
 	};
 

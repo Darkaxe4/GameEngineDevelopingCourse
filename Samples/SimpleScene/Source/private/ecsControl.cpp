@@ -5,7 +5,10 @@
 #include <flecs.h>
 #include <Input/Controller.h>
 #include <Input/InputHandler.h>
-#include <Vector.h>
+#include <ecsMesh.h>
+#include <DefaultGeometry.h>
+#include <RenderObject.h>
+#include <ecsWeapon.h>
 
 using namespace GameEngine;
 
@@ -35,6 +38,24 @@ void RegisterEcsControlSystems(flecs::world& world)
 		camera.ptr->SetPosition(position.value);
 	});
 
+	world.system<Weapon, const CameraPtr>()
+		.each([&](flecs::entity e, Weapon& weapon, const CameraPtr& camera)
+		{
+			weapon.direction = camera.ptr->GetViewDir();
+		});
+
+	world.system<Weapon, const Position, const ControllerPtr, const ReadyToShoot>()
+		.each([&](flecs::entity e, Weapon& weapon, const Position& position, const ControllerPtr& controller, const ReadyToShoot& ready)
+			{
+				if (controller.ptr->IsPressed("Shoot"))
+				{
+					e.set<ShootEvent>({
+						position.value,
+						weapon.direction
+					});
+				}
+			});
+
 	world.system<const Position, Velocity, const ControllerPtr, const BouncePlane, const JumpSpeed>()
 		.each([&](const Position& pos, Velocity& vel, const ControllerPtr& controller, const BouncePlane& plane, const JumpSpeed& jump)
 	{
@@ -48,4 +69,6 @@ void RegisterEcsControlSystems(flecs::world& world)
 		}
 	});
 }
+
+
 

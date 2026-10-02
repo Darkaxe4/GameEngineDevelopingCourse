@@ -1,6 +1,7 @@
 #pragma once
 
 #include <flecs.h>
+#include <Vector.h>
 
 namespace GameEngine::Core
 {
@@ -23,5 +24,5 @@ struct CameraPtr
 	GameEngine::Core::Camera* ptr;
 };
 
-void RegisterEcsControlSystems(flecs::world& world);
 
+void RegisterEcsControlSystems(flecs::world& world);

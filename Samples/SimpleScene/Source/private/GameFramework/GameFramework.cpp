@@ -3,6 +3,7 @@
 #include <ecsControl.h>
 #include <ecsMesh.h>
 #include <ecsPhys.h>
+#include <ecsWeapon.h>
 #include <GameFramework/GameFramework.h>
 #include <Input/Controller.h>
 #include <RenderObject.h>
@@ -14,6 +15,7 @@ void GameFramework::Init()
 	RegisterEcsMeshSystems(m_World);
 	RegisterEcsControlSystems(m_World);
 	RegisterEcsPhysSystems(m_World);
+	RegisterEcsWeaponSystems(m_World);
 
 	flecs::entity cubeControl = m_World.entity()
 		.set(Position{ Math::Vector3f(-2.f, 0.f, 0.f) })
@@ -35,13 +37,18 @@ void GameFramework::Init()
 		.set(BouncePlane{ Math::Vector4f(0.f, 1.f, 0.f, 5.f) })
 		.set(Bounciness{ 1.f })
 		.set(GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
-		.set(RenderObjectPtr{ new Render::RenderObject() });
+		.set(RenderObjectPtr{ new Render::RenderObject() })
+		.set(Collider{ 1.f })
+		.set(AmmoRefiller{ size_t{2} });
 
 	flecs::entity camera = m_World.entity()
 		.set(Position{ Math::Vector3f(0.0f, 12.0f, -10.0f) })
 		.set(Speed{ 10.f })
 		.set(CameraPtr{ Core::g_MainCamera })
-		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) });
+		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) })
+		.set(WeaponInfo{ 0.5, 6.f, size_t{6} })
+		.set(Weapon{ Math::Vector3f::Zero(), 0.f, size_t{6} })
+		.add<ReadyToShoot>();
 }
 
 void GameFramework::Update(float dt)
