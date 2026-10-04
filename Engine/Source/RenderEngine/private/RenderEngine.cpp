@@ -57,4 +57,20 @@ namespace GameEngine::Render
 
 		m_RenderObjects.push_back(renderObject);
 	}
+	
+	void RenderEngine::DestroyRenderObject(RenderObject* renderObject)
+	{
+		auto target = m_RenderObjects.cend();
+		for (auto it = m_RenderObjects.cbegin(); it != m_RenderObjects.end(); ++it)
+		{
+			if (*it == renderObject)
+				target = it;
+		}
+
+		if (target == m_RenderObjects.end())
+			return;
+
+		delete (*target);
+		m_RenderObjects.erase(target);
+	}
 }

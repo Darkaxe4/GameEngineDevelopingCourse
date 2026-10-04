@@ -14,16 +14,25 @@ void RegisterEcsMeshSystems(flecs::world& world)
 
 	world.system<const GeometryPtr, RenderObjectPtr>()
 		.each([&](flecs::entity e, const GeometryPtr& geometry, RenderObjectPtr& renderObject)
-	{
-		renderThread->ptr->EnqueueCommand(Render::ERC::CreateRenderObject, geometry.ptr, renderObject.ptr);
-		e.remove<GeometryPtr>();
-	});
+			{
+				renderThread->ptr->EnqueueCommand(Render::ERC::CreateRenderObject, geometry.ptr, renderObject.ptr);
+				e.remove<GeometryPtr>();
+			});
 
 	world.system<RenderObjectPtr, const Position>()
 		.each([&](RenderObjectPtr& renderObject, const Position& position)
-	{
-		renderObject.ptr->SetPosition(position.value, renderThread->ptr->GetMainFrame());
-	});
+			{
+				renderObject.ptr->SetPosition(position.value, renderThread->ptr->GetMainFrame());
+			});
+
+	world.system<RenderObjectPtr, MarkedToDestroy>()
+		.each([&](flecs::entity e, RenderObjectPtr& renderObject, MarkedToDestroy marker)
+			{
+				world.defer_begin();
+				renderThread->ptr->EnqueueCommand(Render::ERC::DestroyRenderObject, static_cast<GameEngine::RenderCore::Geometry::Ptr>(nullptr), renderObject.ptr);
+				e.destruct();
+				world.defer_end();
+			});
 }
 
 

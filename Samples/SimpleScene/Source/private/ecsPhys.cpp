@@ -1,5 +1,6 @@
 #include <ecsPhys.h>
 #include <flecs.h>
+#include <ecsMesh.h>
 
 namespace
 {
@@ -102,14 +103,11 @@ void RegisterEcsPhysSystems(flecs::world& world)
 		.write(flecs::Wildcard)
 		.each([&](flecs::entity e, DestroyAfterCollision& marker)
 	{
+		if (e.has<MarkedToDestroy>())
+			return;
 		marker.timer -= world.delta_time();
-
 		if (marker.timer <= 0.f)
-		{
-			world.defer_begin();
-			e.destruct();
-			world.defer_end();
-		}
+			e.add<MarkedToDestroy>();
 	});
 
 }
