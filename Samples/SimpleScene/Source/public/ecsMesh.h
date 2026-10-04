@@ -18,4 +18,6 @@ struct RenderObjectPtr
 	GameEngine::Render::RenderObject* ptr = nullptr;
 };
 
+struct MarkedToDestroy{};
+
 void RegisterEcsMeshSystems(flecs::world& world);
