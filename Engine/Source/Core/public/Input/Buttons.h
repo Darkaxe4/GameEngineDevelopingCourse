@@ -12,6 +12,7 @@ namespace GameEngine
 			S,
 			W,
 			D,
+			E,
 			UP,
 			DOWN,
 			LEFT,
