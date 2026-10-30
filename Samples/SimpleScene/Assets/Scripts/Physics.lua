@@ -90,14 +90,12 @@ local function intersects(pos1, col1, pos2, col2)
     return distanceSquared <= radius * radius
 end
 
-local MarkedToDestroy = ecs.lookup("DestroyTimer")
-
 local function CollisionSystem(it)
-	for col1, pos1, ent1 in ecs.each(it) do
-		for col2, pos2, ent2 in ecs.each(it) do
+	for col1, pos1, vel1, ent1 in ecs.each(it) do
+		for col2, pos2, vel2, ent2 in ecs.each(it) do
 			if ent1 ~= ent2 and intersects(pos1, col1, pos2, col2) then
-				ecs.add(ent1, MarkedToDestroy)
-				ecs.add(ent2, MarkedToDestroy)
+				pos1.y = 10
+                pos2.y = 10
 			end
         end
     end
@@ -111,4 +109,4 @@ ecs.system(FrictionSystem, "FrictionSystem", ecs.OnUpdate, "Velocity, FrictionAm
 ecs.system(ShiverSystem, "ShiverSystem", ecs.OnUpdate, "Position, ShiverAmount")
 ecs.system(BounceSystem, "BounceSystem", ecs.OnUpdate, "Position, Velocity, BouncePlane, Bounciness")
 ecs.system(DestroyTimerSystem, "DestroyTimerSystem", ecs.OnUpdate, "DestroyTimer")
-ecs.system(CollisionSystem, "CollisionSystem", ecs.OnUpdate, "Collider, Position")
+ecs.system(CollisionSystem, "CollisionSystem", ecs.OnUpdate, "Collider, Position, Velocity")

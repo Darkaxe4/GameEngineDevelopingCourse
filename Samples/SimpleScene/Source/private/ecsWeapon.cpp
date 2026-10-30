@@ -57,7 +57,8 @@ void CreateBullet(flecs::world& world, flecs::entity weapon, Math::Vector3f pos,
 		.set(Bounciness{ 0.1f })
 		.set(FrictionAmount{ 1.f })
 		.set(EntitySystem::ECS::GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
-		.set(Collider{ 1.f })
 		.set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
-		.add<IsBullet>();
+		.set(DestroyTimer{5.f})
+		.add<IsBullet>()
+		.set(Collider{ 2.f });
 }

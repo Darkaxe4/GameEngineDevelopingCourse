@@ -22,7 +22,7 @@ void GameFramework::Init()
 	RegisterSystems();
 
 	flecs::entity cubeControl = m_World.entity()
-		.set(Position{ -2.f, 0.f, 0.f })
+		.set(Position{ -2.f, 0.f, 0.f }).set(Collider{2.f})
 		.set(Velocity{ 0.f, 0.f, 0.f })
 		.set(Speed{ 10.f })
 		.set(FrictionAmount{ 0.9f })
@@ -33,7 +33,8 @@ void GameFramework::Init()
 		.set(EntitySystem::ECS::GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
 		.set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
 		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) })
-		.set(DestroyTimer{ 5.f });
+		;
+		
 
 	flecs::entity cubeMoving = m_World.entity()
 		.set(Position{ 2.f, 0.f, 0.f })
@@ -43,17 +44,17 @@ void GameFramework::Init()
 		.set(Bounciness{ 1.f })
 		.set(EntitySystem::ECS::GeometryPtr{ RenderCore::DefaultGeometry::Cube() })
 		.set(EntitySystem::ECS::RenderObjectPtr{ new Render::RenderObject() })
-		.set(Collider{2.f});
+		.set(DestroyTimer{5.f});
+		
 
 	flecs::entity camera = m_World.entity()
 		.set(Position{ 0.0f, 12.0f, -10.0f })
 		.set(Speed{ 10.f })
 		.set(CameraPtr{ Core::g_MainCamera })
 		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) })
-		.set(ControllerPtr{ new Core::Controller(Core::g_FileSystem->GetConfigPath("Input_default.ini")) })
-		.set(WeaponInfo{ 0.5, 6.f, size_t{6} })
-		.set(Weapon{ Math::Vector3f::Zero(), 0.f, size_t{6} })
-		.add<ReadyToShoot>();;
+		.set(WeaponInfo{ 0.3, 6.f, size_t{10} })
+		.set(Weapon{ Math::Vector3f::Zero(), 0.f, size_t{10} })
+		.add<ReadyToShoot>();
 }
 
 void GameFramework::RegisterComponents()
