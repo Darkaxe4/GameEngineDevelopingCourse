@@ -17,6 +17,15 @@ void RegisterEcsMeshSystems(flecs::world& world)
 	{
 		renderObject.ptr->SetPosition(Math::Vector3f(position.x, position.y, position.z), renderThread->ptr->GetMainFrame());
 	});
+
+	world.system<EntitySystem::ECS::RenderObjectPtr, MarkedToDestroy>()
+		.each([&](flecs::entity e, EntitySystem::ECS::RenderObjectPtr& renderObject, MarkedToDestroy marker)
+			{
+				world.defer_begin();
+				renderThread->ptr->EnqueueCommand(Render::ERC::DestroyRenderObject, static_cast<GameEngine::RenderCore::Geometry::Ptr>(nullptr), renderObject.ptr);
+				e.destruct();
+				world.defer_end();
+			});
 }
 
 

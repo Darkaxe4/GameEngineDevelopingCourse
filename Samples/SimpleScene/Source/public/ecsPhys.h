@@ -58,3 +58,17 @@ ECS_STRUCT(Speed,
 	float value;
 });
 
+ECS_STRUCT(Collider,
+{
+	float radius;
+});
+
+
+ECS_STRUCT(DestroyTimer,
+{
+	float value;
+});
+
+struct MarkedToDestroy{};
+
+

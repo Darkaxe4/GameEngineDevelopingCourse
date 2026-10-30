@@ -6,6 +6,7 @@
 #include <Input/Controller.h>
 #include <Input/InputHandler.h>
 #include <Vector.h>
+#include <ecsWeapon.h>
 
 using namespace GameEngine;
 
@@ -49,5 +50,23 @@ void RegisterEcsControlSystems(flecs::world& world)
 			}
 		}
 	});
+
+	world.system<Weapon, const CameraPtr>()
+		.each([&](flecs::entity e, Weapon& weapon, const CameraPtr& camera)
+			{
+				weapon.direction = camera.ptr->GetViewDir();
+			});
+
+	world.system<Weapon, const Position, const ControllerPtr, const ReadyToShoot>()
+		.each([&](flecs::entity e, Weapon& weapon, const Position& position, const ControllerPtr& controller, const ReadyToShoot& ready)
+			{
+				if (controller.ptr->IsPressed("Shoot"))
+				{
+					e.set<ShootEvent>({
+						GameEngine::Math::Vector3f(position.x, position.y, position.z),
+						weapon.direction
+						});
+				}
+			});
 }
 

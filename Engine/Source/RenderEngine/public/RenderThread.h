@@ -12,6 +12,7 @@ namespace GameEngine::Render
 	enum class ERC : uint32_t
 	{
 		CreateRenderObject = 0,
+		DestroyRenderObject,
 	};
 
 	class RENDER_ENGINE_API RenderThread final
