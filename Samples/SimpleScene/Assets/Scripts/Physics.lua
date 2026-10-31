@@ -73,6 +73,14 @@ local function DestroyTimerSystem(it)
     end
 end
 
+local colliderList = {}
+
+local function ColliderListSystem(it)
+    for col, pos, ent in ecs.each(it) do
+        table.insert(colliderList, {col=col, pos=pos, ent=ent})
+    end
+end
+
 local function intersects(pos1, col1, pos2, col2)
     local dx = pos1.x - pos2.x
     local dy = pos1.y - pos2.y
@@ -91,14 +99,19 @@ local function intersects(pos1, col1, pos2, col2)
 end
 
 local function CollisionSystem(it)
-	for col1, pos1, vel1, ent1 in ecs.each(it) do
-		for col2, pos2, vel2, ent2 in ecs.each(it) do
+	for col1, pos1, ent1 in ecs.each(it) do
+		for i = 1, #colliderList do
+            local colliderEntity = colliderList[i]
+            local ent2 = colliderEntity.ent
+            local col2 = colliderEntity.col
+            local pos2 = colliderEntity.pos
 			if ent1 ~= ent2 and intersects(pos1, col1, pos2, col2) then
 				pos1.y = 10
                 pos2.y = 10
 			end
         end
     end
+    colliderList = {}
 end
 				
 
@@ -109,4 +122,5 @@ ecs.system(FrictionSystem, "FrictionSystem", ecs.OnUpdate, "Velocity, FrictionAm
 ecs.system(ShiverSystem, "ShiverSystem", ecs.OnUpdate, "Position, ShiverAmount")
 ecs.system(BounceSystem, "BounceSystem", ecs.OnUpdate, "Position, Velocity, BouncePlane, Bounciness")
 ecs.system(DestroyTimerSystem, "DestroyTimerSystem", ecs.OnUpdate, "DestroyTimer")
-ecs.system(CollisionSystem, "CollisionSystem", ecs.OnUpdate, "Collider, Position, Velocity")
+ecs.system(ColliderListSystem, "ColliderListSystem", ecs.OnUpdate, "Collider, Position")
+ecs.system(CollisionSystem, "CollisionSystem", ecs.OnUpdate, "Collider, Position")
