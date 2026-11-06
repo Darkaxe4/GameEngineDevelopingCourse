@@ -22,8 +22,11 @@ namespace GameEngine
 
 		private:
 			void Save();
+			void SyncEntity(World::LevelObject& entity);
 
 		private:
+			flecs::world m_World;
+			size_t m_CreatedObjCnt = 0;
 			Core::Timer m_SaveButtonMessageTimer;
 			bool m_SaveButtonPressed = false;
 			float m_TimeToShowSaveButtonMessage = 3.f;
